@@ -1,0 +1,87 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Search{% endblock %}
+
+
+
+{% block content %}
+<div class="w-full lg:w-6/12">
+{% if query %}
+
+
+
+        
+            <h2 class="text-2xl font-bold"> Search results for  <span class="font-bold text-red-500 ">"{{ query }}"</span></h2>
+       
+        
+        {% for post in results %}
+        <div class="mt-2">
+
+         
+
+          <!---posts area-->
+                <div class="mt-6">
+                    <div class="max-w-4xl px-10 py-6 mx-auto bg-white rounded-lg shadow-md">
+                        <div class="flex items-center justify-between mb-4">
+                        	<span class="font-light text-gray-600">
+                        		<a href="#" class="flex items-center">
+                                <!--blog author infomation-->
+                                <img src="{{ post.featured_image.url }}"
+                                        alt="author-image" class="hidden object-cover w-10 h-10 mx-4 rounded-full sm:block">
+                                    <h1 class="font-bold text-gray-700 hover:underline">{{ post.author }}</h1>
+                                </a>
+                        	</span>
+                            <!--blog tags-->
+                             {% for tag in post.tags.all %}
+                                <a href="{% url "blog:post_list_by_tag" tag.slug %}"class="px-2 py-1 font-bold bg-red-500 text-white rounded-lg hover:bg-gray-500">
+                                {{ tag.name }}
+                                </a>
+                                {% if not forloop.last %} {% endif %} 
+                              {% endfor %}
+                            
+                        </div>
+
+		                
+                        <div class="mt-2">
+                        <a href="{{ post.get_absolute_url }}"class="sm:text-3xl md:text-3xl lg:text-3xl xl:text-4xl font-bold text-purple-500  hover:underline">{{ post.title }}</a>
+                            
+                            <!--post body-->
+                            <p class="mt-2 text-gray-500">{{ post.body|truncatewords:20|linebreaks }}</p>
+                        </div>
+                        <div class="flex items-center justify-between mt-4">
+
+                        	<!-- <p class="text-sm text-green-500 font-bold bg-gray-100 rounded-full py-2 px-2 hover:text-red-500">
+                            Published {{ post.publish }} 
+                            </p> -->
+
+                         <div class="flex items-center">
+                        <div class="relative flex items-center justify-center space-x-3">
+                        <!--placeholder for social share handles-->
+                        
+                      </div>
+                  	</div>
+                    </div>
+                   </div>
+                </div>
+         </div>
+
+         {% empty %}
+         <div class="mt-6 max-w-4xl px-10 py-16 mx-auto bg-gray-100  bg-white min-w-screen animation-fade animation-delay  px-0 px-8 mx-auto sm:px-12 xl:px-5">
+              <p class="mt-1 text-2xl font-bold text-left text-gray-800 sm:mx-6 sm:text-2xl md:text-3xl lg:text-4xl sm:text-center sm:mx-0">There are no search results for <span class="font-bold text-red-500 ">"{{ query }}"</span>.</p>
+            
+        
+          </div>
+          {% endfor %}
+      </div>
+          {% else %}
+          
+           
+
+    <!--pagination using function based view-->
+    {% include "pagination.html" with page=posts %}
+    
+    
+    </div>
+    {% endif %}
+
+ {% endblock %}
